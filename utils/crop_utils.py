@@ -7,7 +7,7 @@ import numpy as np
 from tqdm import tqdm
 from skimage import io
 
-from face_cropper.utils.file_utils import get_img_paths_in_dir
+from crop_tools.utils.file_utils import get_img_paths_in_dir
 
 def get_bounding_boxes(dets):
     """returns a list of dictionaries containing
