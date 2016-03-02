@@ -7,7 +7,9 @@ import numpy as np
 from tqdm import tqdm
 from skimage import io
 
-from crop_tools.utils.file_utils import get_img_paths_in_dir
+from crop_tool.utils.file_utils import get_img_paths_in_dir
+
+MODEL_PATH = '/users/albanie/code/crop_tool/models/detector.svm'
 
 def get_bounding_boxes(dets):
     """returns a list of dictionaries containing
@@ -52,15 +54,21 @@ def is_valid(box, img):
     valid_height = box['top_left_y'] > 0 and box['bottom_right_y'] < img.shape[0]
     return valid_width and valid_height                                                                  
 
-def convert_dataset(src_dir, target_dir):
+def get_subdirs(src_dir):
+    """returns the subfolers in the given directory."""
+    img_dirs = sorted(next(os.walk(src_dir))[1])
+    subdirs = [src_dir + img_dir for img_dir in img_dirs]
+    return subdirs
+    
+def convert_dataset(src_dir, dest_dir, idx):
     """converts the dataset of colour face images to 
     54 x 54 greyscale crops of the faces."""
-    img_dirs = next(os.walk(src_dir))[1]
-    img_dirs = [src_dir + img_dir for img_dir in img_dirs]
-    detector = dlib.simple_object_detector("detector.svm")
-    for img_dir in tqdm(img_dirs[11:13]):
+    subdirs = get_subdirs(src_dir)
+    detector = dlib.simple_object_detector(MODEL_PATH)
+    for img_dir in tqdm(subdirs[idx[0]:idx[1]]):
+	print(img_dir)
         jpegs = get_img_paths_in_dir(img_dir)
-        target_dir = target_dir + img_dir.split('/')[-1]
+        target_dir = dest_dir + img_dir.split('/')[-1]
         if not os.path.exists(target_dir):
             os.makedirs(target_dir)
         for src_path in jpegs:
@@ -76,9 +84,8 @@ def convert_dataset(src_dir, target_dir):
                     cropped_img = crop_frame(img, square_box)
                     PIL_img = PIL.Image.fromarray(cropped_img)
                     resized_img = PIL_img.resize((54,54), PIL.Image.BILINEAR)
-                    grey_img = resized_img.convert('L')
-                    print(target_path)
-                    grey_img.save(target_path)
-                    print('saved')
+		    resized_img.save(target_path)
+                    # grey_img = resized_img.convert('L')
+                    # grey_img.save(target_path)
 
     
