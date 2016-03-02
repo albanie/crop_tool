@@ -60,12 +60,12 @@ def get_subdirs(src_dir):
     subdirs = [src_dir + img_dir for img_dir in img_dirs]
     return subdirs
     
-def convert_dataset(src_dir, dest_dir, idx):
+def convert_dataset(src_dir, dest_dir):
     """converts the dataset of colour face images to 
     54 x 54 greyscale crops of the faces."""
     subdirs = get_subdirs(src_dir)
     detector = dlib.simple_object_detector(MODEL_PATH)
-    for img_dir in tqdm(subdirs[idx[0]:idx[1]]):
+    for img_dir in tqdm(subdirs):
 	print(img_dir)
         jpegs = get_img_paths_in_dir(img_dir)
         target_dir = dest_dir + img_dir.split('/')[-1]
@@ -85,6 +85,7 @@ def convert_dataset(src_dir, dest_dir, idx):
                     PIL_img = PIL.Image.fromarray(cropped_img)
                     resized_img = PIL_img.resize((54,54), PIL.Image.BILINEAR)
 		    resized_img.save(target_path)
+                    print(target_path)
                     # grey_img = resized_img.convert('L')
                     # grey_img.save(target_path)
 

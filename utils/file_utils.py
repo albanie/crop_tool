@@ -1,6 +1,6 @@
 import os
 
-def get_img_paths_in_dir(image_dir, suffix=".JPEG"):
+def get_img_paths_in_dir(image_dir, suffix=".jpg"):
     """returns a list of full paths to files with 
     the given suffix in image_dir."""
     root, frames = get_imgs_in_dir(image_dir, suffix)
