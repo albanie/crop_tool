@@ -8,8 +8,8 @@ from tqdm import tqdm
 from skimage import io
 
 from crop_tool.utils.file_utils import get_img_paths_in_dir
+from crop_tool.settings import MODEL_PATH
 
-MODEL_PATH = '/users/albanie/code/crop_tool/models/detector.svm'
 
 def get_bounding_boxes(dets):
     """returns a list of dictionaries containing
